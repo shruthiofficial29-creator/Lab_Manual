@@ -80,3 +80,16 @@ public class StudentJDBC {
         }
     }
 }
+
+/**
+CREATE DATABASE college;
+
+USE college;
+
+CREATE TABLE student
+(
+    rollno INT PRIMARY KEY,
+    name VARCHAR(30),
+    department VARCHAR(20),
+    marks INT
+);**/

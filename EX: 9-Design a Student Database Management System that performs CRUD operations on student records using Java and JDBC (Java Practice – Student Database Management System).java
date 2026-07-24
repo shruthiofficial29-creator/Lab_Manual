@@ -1,14 +1,35 @@
+/*
+ ============================================================================
+ SQL DATABASE SETUP (Run these commands in MySQL before executing Java code):
+ ============================================================================
+ CREATE DATABASE college;
+ USE college;
+
+ CREATE TABLE student (
+     rollno INT PRIMARY KEY,
+     name VARCHAR(30),
+     department VARCHAR(20),
+     marks INT
+ );
+ ============================================================================
+*/
+
 import java.sql.*;
 
 public class StudentJDBC {
-    private static final String URL = "jdbc:mysql://localhost:3606/college?useSSL=false&allowPublicKeyRetrieval=true";
+    // Note: Default MySQL port is typically 3306. Change to 3606 if configured.
+    private static final String URL = "jdbc:mysql://localhost:3306/college?useSSL=false&allowPublicKeyRetrieval=true";
     private static final String USER = "root";
     private static final String PASSWORD = "root";
+
     public static void main(String[] args) {
         Connection conn = null;
         try {
+            // Load MySQL JDBC Driver
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(URL, USER, PASSWORD);
+
+            // 1. Insert Records
             String insertSQL = "INSERT INTO student (rollno, name, department, marks) VALUES (?, ?, ?, ?)";
             try (PreparedStatement pstmtInsert = conn.prepareStatement(insertSQL)) {
                 pstmtInsert.setInt(1, 101);
@@ -16,6 +37,7 @@ public class StudentJDBC {
                 pstmtInsert.setString(3, "CSE");
                 pstmtInsert.setInt(4, 87);
                 pstmtInsert.executeUpdate();
+
                 pstmtInsert.setInt(1, 102);
                 pstmtInsert.setString(2, "Sneha");
                 pstmtInsert.setString(3, "ISE");
@@ -24,6 +46,8 @@ public class StudentJDBC {
 
                 System.out.println("Records Inserted Successfully.\n");
             }
+
+            // 2. Update Record
             String updateSQL = "UPDATE student SET marks = ? WHERE rollno = ?";
             try (PreparedStatement pstmtUpdate = conn.prepareStatement(updateSQL)) {
                 pstmtUpdate.setInt(1, 95);
@@ -32,6 +56,8 @@ public class StudentJDBC {
 
                 System.out.println("Record Updated Successfully.\n");
             }
+
+            // 3. Search Record
             String searchSQL = "SELECT * FROM student WHERE rollno = ?";
             try (PreparedStatement pstmtSearch = conn.prepareStatement(searchSQL)) {
                 pstmtSearch.setInt(1, 101);
@@ -39,13 +65,15 @@ public class StudentJDBC {
 
                 System.out.println("Student Details\n");
                 if (rsSearch.next()) {
-                    System.out.println("Roll No : " + rsSearch.getInt("rollno"));
-                    System.out.println("Name    : " + rsSearch.getString("name"));
+                    System.out.println("Roll No    : " + rsSearch.getInt("rollno"));
+                    System.out.println("Name       : " + rsSearch.getString("name"));
                     System.out.println("Department : " + rsSearch.getString("department"));
-                    System.out.println("Marks   : " + rsSearch.getInt("marks"));
+                    System.out.println("Marks      : " + rsSearch.getInt("marks"));
                 }
                 System.out.println();
             }
+
+            // 4. Display All Records
             String displaySQL = "SELECT * FROM student";
             try (PreparedStatement pstmtDisplay = conn.prepareStatement(displaySQL)) {
                 ResultSet rsDisplay = pstmtDisplay.executeQuery();
@@ -69,7 +97,7 @@ public class StudentJDBC {
         } catch (SQLException e) {
             System.out.println("Database error: " + e.getMessage());
         } finally {
-            // 10. Close Connection
+            // Close Connection
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
@@ -80,16 +108,3 @@ public class StudentJDBC {
         }
     }
 }
-
-/**
-CREATE DATABASE college;
-
-USE college;
-
-CREATE TABLE student
-(
-    rollno INT PRIMARY KEY,
-    name VARCHAR(30),
-    department VARCHAR(20),
-    marks INT
-);**/

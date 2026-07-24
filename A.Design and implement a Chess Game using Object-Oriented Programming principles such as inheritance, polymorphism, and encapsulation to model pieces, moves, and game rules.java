@@ -60,6 +60,7 @@ public class ChessGame {
         sc.close();
     }
 }
+
 class Spot {
     private int x;
     private int y;
@@ -76,6 +77,7 @@ class Spot {
     public Piece getPiece() { return piece; }
     public void setPiece(Piece piece) { this.piece = piece; }
 }
+
 abstract class Piece {
     private boolean white;
     private boolean killed = false;
@@ -94,6 +96,7 @@ abstract class Piece {
     // Polymorphic move validation
     public abstract boolean canMove(Board board, Spot start, Spot end);
 }
+
 class Pawn extends Piece {
     public Pawn(boolean white) { super(white); }
 
@@ -246,6 +249,7 @@ class King extends Piece {
         return dx <= 1 && dy <= 1;
     }
 }
+
 class Board {
     private Spot[][] spots = new Spot[8][8];
 
@@ -307,6 +311,7 @@ class Board {
         System.out.println("  a b c d e f g h");
     }
 }
+
 class Move {
     private Player player;
     private Spot start;
@@ -337,6 +342,7 @@ class Player {
 
     public boolean isWhite() { return whiteSide; }
 }
+
 class Game {
     private Player[] players = new Player[2];
     private Board board;
